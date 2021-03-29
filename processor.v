@@ -107,7 +107,7 @@ module processor(
 
     assign DXOPCODE = outIRDX[31:27];
     assign jump = (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4) || ((DXOPCODE==22) && ne); 
-    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4); 
+    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4) || ((DXOPCODE==22) && ne); 
     assign jr = (DXOPCODE == 4); 
 
     multData multdata1(aluInA, aluInB_before_mux, outIRDX, notClock, reset, outMDA, outMDB, outMDIR, ctrl_MULT, ctrl_DIV); 
@@ -129,8 +129,7 @@ module processor(
     assign data_writeReg = (outIRMW[31:27] == 3) ? outPCMW : dataAfterM2; 
     
     always @ (posedge clock) begin
-        $display("NE %d", ne);
-        $display("ALU OP %d",aluOp);
+        $display("OMW %d",inOXM);
     end
     
     multControl mc1(outIRDX, PWReadyOut, clock, multStall, commitMultDiv);

@@ -27,7 +27,7 @@ assign alu_altered = (aluop == 5'b0) ? w2: w3;
 assign alteredO_input = (opcode == 5'b0) ? alu_altered : addi_altered; 
 
 assign w5 = ovf ? alteredO_input : alu_out; 
-assign XMO_input = (rd == 5'b0) ? 0 : w5;
+assign XMO_input = ((rd == 5'b0) && opcode !=21) ? 0 : w5;
 assign w6 = ovf ? alteredIns : DXIR; 
 
 assign XMIR_input = (opcode == 0 &&(aluop==6||aluop==7)) ? 0 : w6; 

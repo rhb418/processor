@@ -34,7 +34,7 @@ assign imm[30] = DXIR[16];
 assign imm[31] = DXIR[16];
 
 wire targetOps;
-assign targetOps = (DXIROP == 1);
+assign targetOps = (DXIROP == 1) || (DXIROP == 21) || (DXIROP ==22);
 
 assign out = targetOps ? target : imm; 
 
