@@ -22,7 +22,7 @@ assign branchOp = isBranch ? 1 : 0;
 assign aluOp = isAluOp ? op1 : branchOp; 
 assign sham = (opcode ==5'b0 ) ? sham1 :  5'b0;
 
-assign SXmux = (opcode != 5'b0);
+assign SXmux = (opcode != 0) && (opcode !=2) && (opcode !=6);
 
 
 endmodule

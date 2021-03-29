@@ -22,7 +22,7 @@ reg32 regIR(DXIR,outIR,clock,enable,reset);
 
 dffe ctrlMult(out_ctrl_Mult, ctrl_MULT, clock, 1'b1, 1'b0);
 dffe ctrlDiv(out_ctrl_DIV, ctrl_DIV, clock, 1'b1, 1'b0);
-
+/*
 always @ (posedge clock) begin
     $display("AData: %d", outA);
     $display("BData: %d", outB);
@@ -30,5 +30,5 @@ always @ (posedge clock) begin
     $display("CTRLDIV: %d", out_ctrl_DIV);
     $display("ALUOP: %d", DXIRALUOP);
 end
-
+*/
 endmodule

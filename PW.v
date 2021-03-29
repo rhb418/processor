@@ -8,7 +8,7 @@ output [31:0] resultOut, insOut;
 reg32 RES(result, resultOut, clk, en, reset);
 reg32 IR(DXIR, insOut, clk, en, reset);
 dffe rd(readyOut, ready, clk, en, 1'b0);
-
+/*
 
 always @ (negedge clk) begin
     $display("Result: %d", resultOut);
@@ -21,5 +21,5 @@ end
 always @ (negedge clk) begin
     $display("InsOUT: %d", insOut[26:22]);
 end
-
+*/
 endmodule

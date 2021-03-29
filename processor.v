@@ -124,10 +124,7 @@ module processor(
     assign data_writeReg = (commitMultDiv) ? PWResultOut : dataAfterM1; 
     
     always @ (posedge clock) begin
-        $display("aSelect %d",aSelect);
-        $display("OXM %d",outOXM);
-        $display("Datawritereg %d",data_writeReg);
-        $display("ALU OUT %d",alu_out);
+        $display("NE %d", ne);
         $display("ALU OP %d",aluOp);
     end
     
