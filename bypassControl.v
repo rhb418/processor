@@ -18,7 +18,7 @@ assign DXRT = DXIR[16:12];
 assign DXOP = DXIR[31:27]; 
 assign DXRD = DXIR[26:22]; 
 
-wire aSelect2, aSelect1, aSelect0, bSelect2, bSelect1, bSelect0, XMWriteReg, MWWriteReg, isAluOp, isLoadStore, isBranch, aluLoadStoreAXM, aluLoadStoreAMW, branchAXM, branchAMW; 
+wire aSelect2, aSelect1, aSelect0, bSelect2, bSelect1, bSelect0, XMWriteReg, MWWriteReg, isAluOp, isAddi, isLoadStore, isBranch, aluLoadStoreAXM, aluLoadStoreAMW, branchAXM, branchAMW; 
 
 
 assign XMWriteReg = (XMOP == 0) || (XMOP == 5) || (XMOP ==8); 
@@ -27,9 +27,10 @@ assign MWWriteReg = (MWOP == 0) || (MWOP == 5) || (MWOP ==8);
 assign isAluOp = (DXOP == 0);
 assign isLoadStore = (DXOP == 7) || (DXOP ==8);
 assign isBranch = (DXOP == 2) || (DXOP == 6); 
+assign isAddi = (DXOP == 5); 
 
-assign aluLoadStoreAXM = (isAluOp || isLoadStore) && (DXRS == XMRD); 
-assign aluLoadStoreAMW = (isAluOp || isLoadStore) && (DXRS == MWRD) && !aluLoadStoreAXM; 
+assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD); 
+assign aluLoadStoreAMW = (isAluOp || isLoadStore || isAddi) && (DXRS == MWRD) && !aluLoadStoreAXM; 
 assign branchAXM = isBranch && (DXRD ==  XMRD); 
 assign branchAMW = isBranch && (DXRD == MWRD) && !branchAXM; 
 
