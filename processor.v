@@ -120,7 +120,7 @@ module processor(
     assign wren = (outIRXM[31:27] == 7) ? 1'b1 : 1'b0; 
 
  
-    MW pMW(outIRXM,outPXM, outOXM, q_dmem, notClock, reset, 1'b1, outIRMW,outPCMW, outOMW, outDMW);
+    MW pMW(outIRXM,outPCXM, outOXM, q_dmem, notClock, reset, 1'b1, outIRMW,outPCMW, outOMW, outDMW);
 
     assign dataAfterM1 = (outIRMW[31:27] == 8) ? outDMW : outOMW; 
     assign data_writeReg = (commitMultDiv) ? PWResultOut : dataAfterM1; 
