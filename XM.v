@@ -1,4 +1,4 @@
-module XM(ins, PC, O, B, clk, reset, en, outins,outPC outO, outB);
+module XM(ins, PC, O, B, clk, reset, en, outins, outPC, outO, outB);
 
 input [31:0] ins, O, B, PC; 
 input clk, reset, en; 
