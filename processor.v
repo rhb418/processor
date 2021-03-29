@@ -104,14 +104,8 @@ module processor(
     exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
 
     assign DXOPCODE = outIRDX[31:27];
-<<<<<<< HEAD
-
-    assign jump = (DXOPCODE == 1) || (DXOPCODE ==3); 
-    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE ==3); 
-=======
     assign jump = (DXOPCODE == 1) || (DXOPCODE == 3); 
     assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3); 
->>>>>>> myMultDiv
 
 
 
