@@ -28,11 +28,12 @@ assign isAluOp = (DXOP == 0);
 assign isLoadStore = (DXOP == 7) || (DXOP ==8);
 assign isBranch = (DXOP == 2) || (DXOP == 6); 
 assign isAddi = (DXOP == 5); 
+assign isJr = (DXOP == 4);
 
 assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD); 
 assign aluLoadStoreAMW = (isAluOp || isLoadStore || isAddi) && (DXRS == MWRD) && !aluLoadStoreAXM; 
-assign branchAXM = isBranch && (DXRD ==  XMRD); 
-assign branchAMW = isBranch && (DXRD == MWRD) && !branchAXM; 
+assign branchAXM = (isBranch||isJr) && (DXRD ==  XMRD); 
+assign branchAMW = (isBranch||isJr) && (DXRD == MWRD) && !branchAXM; 
 
 assign aSelect1 = (aluLoadStoreAXM || branchAXM) && XMWriteReg; 
 assign aSelect2 = (aluLoadStoreAMW || branchAMW) && MWWriteReg; 
