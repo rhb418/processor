@@ -16,15 +16,15 @@ assign FDRT = FDIR[16:12];
 
 wire isBranch, isLoadOrStore, isAluOP; 
 
-assign isBranch = (FDOP == 2) || (FDOP == 6); 
+assign isBranchOrJr = (FDOP == 2) || (FDOP == 6) || (FDOP ==4); 
 assign isLoadOrStore = (FDOP == 7) || (FDOP ==8); 
 assign isAluOP = (FDOP == 0); 
 
 
 
-assign readA = isBranch ? FDRD : FDRS;
+assign readA = isBranchOrJr ? FDRD : FDRS;
 assign readBAluOrLoadStore = isLoadOrStore ? FDRD : FDRT;
-assign readB = isBranch ? FDRS : readBAluOrLoadStore; 
+assign readB = isBranchOrJr ? FDRS : readBAluOrLoadStore; 
 
 assign wE = (MWOP == 0)  || ((PWOP == 0) && multOrDivReady) || (MWOP == 5) || (MWOP == 8) || (MWOP ==3); 
 assign aluOpWriteD = multOrDivReady ? PWIR[26:22] : MWIR[26:22];

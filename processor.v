@@ -66,20 +66,21 @@ module processor(
     wire notClock;
     not n1(notClock,clock);
 
-    wire [31:0] pcOut, pcPlusT, pcPlus1, newPC;
+    wire [31:0] pcOut, pcPlusT, pcPlus1, newPC, newerPC;
     wire [31:0] pcIn, inFDIR; 
     wire dc1, dc2, dc3, ne, lt, dc6, dc7, dc8, stall, multStall, loadStall, branchTaken;
     wire [31:0] outPCDX, outIRDX, outADX, outBDX, SXout, aluInA, aluInB_before_mux, aluInB, alu_out, outIRXM, outOXM, outBXM, outIRMW, outOMW, outDMW, inIRXM, inOXM, inDXIR, dataAfterM1, dataAfterM2, multResult, PWResultOut, PWINSOut; 
     wire [31:0] outMDA, outMDB, outMDIR, outPCXM, outPCMW; 
     wire [1:0] aSelect, bSelect; 
     wire [4:0] aluOp, sham, DXOPCODE; 
-    wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv, jump; 
+    wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv, jump, jr; 
 
     assign address_imem = pcOut;
     assign stall =  (loadStall || multStall);  
 
     assign newPC = jump ? SXout : pcPlusT;
-    assign pcIn = branchTaken ? newPC : pcPlus1; 
+    assign newerPC = jr ? aluInA : newPC; 
+    assign pcIn = branchTaken ? newerPC : pcPlus1; 
     reg32 PC(pcIn, pcOut, notClock,!stall , reset);
     adder32 pcAdder(pcPlus1,dc1, dc2, dc3, pcOut, 32'b1, 1'b0); 
 
@@ -105,8 +106,9 @@ module processor(
     exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
 
     assign DXOPCODE = outIRDX[31:27];
-    assign jump = (DXOPCODE == 1) || (DXOPCODE == 3); 
-    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3); 
+    assign jump = (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4); 
+    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4); 
+    assign jr = (DXOPCODE == 4); 
 
     multData multdata1(aluInA, aluInB_before_mux, outIRDX, notClock, reset, outMDA, outMDB, outMDIR, ctrl_MULT, ctrl_DIV); 
 
