@@ -128,9 +128,6 @@ module processor(
     assign dataAfterM2 = (commitMultDiv) ? PWResultOut : dataAfterM1; 
     assign data_writeReg = (outIRMW[31:27] == 3) ? outPCMW : dataAfterM2; 
     
-    always @ (posedge clock) begin
-        $display("OMW %d",inOXM);
-    end
     
     multControl mc1(outIRDX, PWReadyOut, clock, multStall, commitMultDiv);
 
