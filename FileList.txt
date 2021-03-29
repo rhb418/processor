@@ -9,14 +9,11 @@ ars2bit.v
 ars4bit.v
 ars8bit.v
 arsbarrel.v
-boothmult.v
 bypassControl.v
 CLA_8bit_adder.v
-control.v
-control_div.v
 decoder32.v
 dffe.v
-div.v
+divider.v
 DX.v
 equals0.v
 exceptionHandler.v
@@ -32,7 +29,7 @@ llsbarrel.v
 multControl.v
 multData.v
 multdiv.v
-multOvf.v
+multiplier.v
 mux_2.v
 mux_4.v
 mux_8.v
