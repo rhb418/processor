@@ -30,13 +30,13 @@ assign isBranch = (DXOP == 2) || (DXOP == 6);
 assign isAddi = (DXOP == 5); 
 assign isJr = (DXOP == 4);
 
-assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD) && XMWriteReg; 
-assign aluLoadStoreAMW = (isAluOp || isLoadStore || isAddi) && (DXRS == MWRD) && !aluLoadStoreAXM && MWWriteReg; 
-assign branchAXM = (isBranch||isJr) && (DXRD ==  XMRD) && XMWriteReg; 
-assign branchAMW = (isBranch||isJr) && (DXRD == MWRD) && !branchAXM && MWWriteReg; 
+assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD); 
+assign aluLoadStoreAMW = (isAluOp || isLoadStore || isAddi) && (DXRS == MWRD) && !aluLoadStoreAXM; 
+assign branchAXM = (isBranch||isJr) && (DXRD ==  XMRD); 
+assign branchAMW = (isBranch||isJr) && (DXRD == MWRD) && !branchAXM; 
 
-assign aSelect1 = (aluLoadStoreAXM || branchAXM); 
-assign aSelect2 = (aluLoadStoreAMW || branchAMW); 
+assign aSelect1 = (aluLoadStoreAXM || branchAXM) && XMWriteReg; 
+assign aSelect2 = (aluLoadStoreAMW || branchAMW) && MWWriteReg; 
 
 
 assign aSelect[0] = aSelect1; 
@@ -44,16 +44,16 @@ assign aSelect[1] = aSelect2;
 
 wire aluBXM, loadStoreBXM, branchBXM, aluBMW, loadStoreBMW, branchBMW; 
 
-assign aluBXM = isAluOp && (DXRT == XMRD) && XMWriteReg; 
-assign loadStoreBXM = isLoadStore && (DXRD == XMRD) && XMWriteReg; 
-assign branchBXM = isBranch && (DXRS == XMRD) && XMWriteReg; 
+assign aluBXM = isAluOp && (DXRT == XMRD); 
+assign loadStoreBXM = isLoadStore && (DXRD == XMRD); 
+assign branchBXM = isBranch && (DXRS == XMRD); 
 
-assign aluBMW = isAluOp && (DXRT == MWRD) && !aluBXM && MWWriteReg; 
-assign loadStoreBMW = isLoadStore &&(DXRD == MWRD) && !loadStoreBXM && MWWriteReg; 
-assign branchBMW = isBranch && (DXRS == MWRD) && !branchBXM && MWWriteReg; 
+assign aluBMW = isAluOp && (DXRT == MWRD) && !aluBXM; 
+assign loadStoreBMW = isLoadStore &&(DXRD == MWRD) && !loadStoreBXM; 
+assign branchBMW = isBranch && (DXRS == MWRD) && !branchBXM; 
 
-assign bSelect1 = (aluBXM || loadStoreBXM || branchBXM);
-assign bSelect2 = (aluBMW || loadStoreBMW ||branchBMW);
+assign bSelect1 = (aluBXM || loadStoreBXM || branchBXM) && XMWriteReg;
+assign bSelect2 = (aluBMW || loadStoreBMW ||branchBMW) && MWWriteReg;
 
 assign bSelect[0] = bSelect1; 
 assign bSelect[1] = bSelect2; 
