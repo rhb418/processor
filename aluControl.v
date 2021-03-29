@@ -4,15 +4,13 @@ input [31:0] DXIR;
 output [4:0] aluOp , sham; 
 output SXmux; 
 
-wire [4:0] op1, sham1, opcode; 
-wire multOrDiv, cond;
-
-
+wire [4:0] op1, sham1, opcode, branchOp; 
+wire multOrDiv, isBranch, isAluOp;
 
 
 assign opcode = DXIR[31:27];
 
-assign op1 = DXIR[6:2], branchOp;
+assign op1 = DXIR[6:2];
 assign sham1 = DXIR[11:7]; 
 
 assign multOrDiv = ((opcode == 0) && ((op1 == 6) || (op1 == 7))) ; 
