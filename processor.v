@@ -70,7 +70,7 @@ module processor(
     wire [31:0] pcIn, inFDIR; 
     wire dc1, dc2, dc3, ne, lt, dc6, dc7, dc8, stall, multStall, loadStall, branchTaken;
     wire [31:0] outPCDX, outIRDX, outADX, outBDX, SXout, aluInA, aluInB_before_mux, aluInB, alu_out, outIRXM, outOXM, outBXM, outIRMW, outOMW, outDMW, inIRXM, inOXM, inDXIR, dataAfterM1, dataAfterM2, multResult, PWResultOut, PWINSOut; 
-    wire [31:0] outMDA, outMDB, outMDIR; 
+    wire [31:0] outMDA, outMDB, outMDIR, outPCXM, outPCMW; 
     wire [1:0] aSelect, bSelect; 
     wire [4:0] aluOp, sham, DXOPCODE; 
     wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv, jump; 
@@ -114,13 +114,13 @@ module processor(
     PW pw1(multResult, outMDIR, data_resultRDY, notClock, 1'b1, reset, PWReadyOut, PWResultOut, PWINSOut);
 
 
-    XM pXM(inIRXM, inOXM, aluInB_before_mux, notClock, reset, 1'b1, outIRXM, outOXM, outBXM);
+    XM pXM(inIRXM, outPCDX, inOXM, aluInB_before_mux, notClock, reset, 1'b1, outIRXM, outPCXM, outOXM, outBXM);
     assign address_dmem = outOXM;
     assign data = memSelect ? data_writeReg : outBXM; 
     assign wren = (outIRXM[31:27] == 7) ? 1'b1 : 1'b0; 
 
  
-    MW pMW(outIRXM, outOXM, q_dmem, notClock, reset, 1'b1, outIRMW, outOMW, outDMW);
+    MW pMW(outIRXM,outPXM, outOXM, q_dmem, notClock, reset, 1'b1, outIRMW,outPCMW, outOMW, outDMW);
 
     assign dataAfterM1 = (outIRMW[31:27] == 8) ? outDMW : outOMW; 
     assign data_writeReg = (commitMultDiv) ? PWResultOut : dataAfterM1; 
