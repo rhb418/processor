@@ -30,9 +30,9 @@ assign isBranch = (DXOP == 2) || (DXOP == 6);
 assign isAddi = (DXOP == 5); 
 assign isJr = (DXOP == 4);
 
-assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD); 
+assign aluLoadStoreAXM = (isAluOp || isLoadStore || isAddi) && (DXRS == XMRD) && XMWriteReg; 
 assign aluLoadStoreAMW = (isAluOp || isLoadStore || isAddi) && (DXRS == MWRD) && !aluLoadStoreAXM; 
-assign branchAXM = (isBranch||isJr) && (DXRD ==  XMRD); 
+assign branchAXM = (isBranch||isJr) && (DXRD ==  XMRD) && XMWriteReg; 
 assign branchAMW = (isBranch||isJr) && (DXRD == MWRD) && !branchAXM; 
 
 assign aSelect1 = (aluLoadStoreAXM || branchAXM) && XMWriteReg; 
@@ -44,9 +44,9 @@ assign aSelect[1] = aSelect2;
 
 wire aluBXM, loadStoreBXM, branchBXM, aluBMW, loadStoreBMW, branchBMW; 
 
-assign aluBXM = isAluOp && (DXRT == XMRD); 
-assign loadStoreBXM = isLoadStore && (DXRD == XMRD); 
-assign branchBXM = isBranch && (DXRS == XMRD); 
+assign aluBXM = isAluOp && (DXRT == XMRD) && XMWriteReg; 
+assign loadStoreBXM = isLoadStore && (DXRD == XMRD) && XMWriteReg; 
+assign branchBXM = isBranch && (DXRS == XMRD) && XMWriteReg; 
 
 assign aluBMW = isAluOp && (DXRT == MWRD) && !aluBXM; 
 assign loadStoreBMW = isLoadStore &&(DXRD == MWRD) && !loadStoreBXM; 
