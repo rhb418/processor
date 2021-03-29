@@ -66,20 +66,9 @@ module processor(
     wire notClock;
     not n1(notClock,clock);
 
-    wire [31:0] pcOut;
-    wire [31:0] pcIn; 
-    wire dc1, dc2, dc3, dc4, dc5, stall, multStall, loadStall;
-
-    assign address_imem = pcOut;
-    assign stall =  (loadStall || multStall);  
-
-
-    reg32 PC(pcIn, pcOut, notClock,!stall , reset);
-    adder32 pcAdder(pcIn,dc1, dc2, dc3, pcOut, 32'b1, 1'b0); 
-
-    wire [31:0] outPCFD, outIRFD;
-    FD pFD(q_imem, pcIn, notClock, reset, !stall, outPCFD, outIRFD);
-
+    wire [31:0] pcOut, pcPlusT, pcPlus1;
+    wire [31:0] pcIn, inFDIR; 
+    wire dc1, dc2, dc3, ne, lt, dc6, dc7, dc8, stall, multStall, loadStall, branchTaken;
     wire [31:0] outPCDX, outIRDX, outADX, outBDX, SXout, aluInA, aluInB_before_mux, aluInB, alu_out, outIRXM, outOXM, outBXM, outIRMW, outOMW, outDMW, inIRXM, inOXM, inDXIR, dataAfterM1, dataAfterM2, multResult, PWResultOut, PWINSOut; 
     wire [31:0] outMDA, outMDB, outMDIR; 
     wire [16:0] SXin; 
@@ -87,19 +76,35 @@ module processor(
     wire [4:0] aluOp, sham; 
     wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv; 
 
-    assign inDXIR = stall ? 0 : outIRFD; 
+    assign address_imem = pcOut;
+    assign stall =  (loadStall || multStall);  
+
+    assign pcIn = branchTaken ? pcPlusT : pcPlus1; 
+    reg32 PC(pcIn, pcOut, notClock,!stall , reset);
+    adder32 pcAdder(pcPlus1,dc1, dc2, dc3, pcOut, 32'b1, 1'b0); 
+
+    wire [31:0] outPCFD, outIRFD;
+    assign inFDIR = branchTaken ? 0 : q_imem;
+    FD pFD(inFDIR, pcIn, notClock, reset, !stall, outPCFD, outIRFD);
+
+
+    assign inDXIR = (stall || branchTaken) ? 0 : outIRFD; 
 
     //DX TO XM
     DX pDX(inDXIR, outPCFD, data_readRegA, data_readRegB, notClock, reset, 1'b1, outIRDX, outPCDX, outADX, outBDX);    
     signExtend se(SXin, SXout);
+
+    adder32 sxPC(pcPlusT,dc6, dc7, dc8, outPCDX, SXout, 1'b0); 
 
     mux_4 aluInAMux(aluInA, aSelect, outADX, outOXM, data_writeReg, 32'b0);
     mux_4 aluInBMux(aluInB_before_mux, bSelect, outBDX, outOXM, data_writeReg, 32'b0);
 
     assign aluInB = SXmux ? SXout : aluInB_before_mux;
 
-    alu alu1(aluInA, aluInB, aluOp, sham, alu_out, dc4, dc5, ovf);
+    alu alu1(aluInA, aluInB, aluOp, sham, alu_out, ne, lt, ovf);
     exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
+
+    assign branchTaken = ((outIRDX[31:27] == 2) && ne) || ((outIRDX[31:27] == 6) && lt); 
 
     multData multdata1(aluInA, aluInB_before_mux, outIRDX, notClock, reset, outMDA, outMDB, outMDIR, ctrl_MULT, ctrl_DIV); 
 
