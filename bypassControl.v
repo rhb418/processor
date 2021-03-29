@@ -52,8 +52,8 @@ assign aluBMW = isAluOp && (DXRT == MWRD) && !aluBXM;
 assign loadStoreBMW = isLoadStore &&(DXRD == MWRD) && !loadStoreBXM; 
 assign branchBMW = isBranch && (DXRS == MWRD) && !branchBXM; 
 
-assign bSelect1 = (aluBXM || loadStoreBXM || branchBXM) && XMWriteReg;
-assign bSelect2 = (aluBMW || loadStoreBMW ||branchBMW) && MWWriteReg;
+assign bSelect1 = (aluBXM || loadStoreBXM || branchBXM) && XMWriteReg || ((DXOP == 22) && (XMOP == 21));
+assign bSelect2 = ((aluBMW || loadStoreBMW ||branchBMW) && MWWriteReg || ((DXOP == 22) && (MWOP == 21))) && !bSelect1;
 
 assign bSelect[0] = bSelect1; 
 assign bSelect[1] = bSelect2; 
