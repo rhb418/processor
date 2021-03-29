@@ -14,7 +14,7 @@ assign op1 = DXIR[6:2];
 assign sham1 = DXIR[11:7]; 
 
 assign multOrDiv = ((opcode == 0) && ((op1 == 6) || (op1 == 7))) ; 
-assign isBranch = (opcode == 2) || (opcode == 6); 
+assign isBranch = (opcode == 2) || (opcode == 6) || (opcode == 22); 
 assign isAluOp = (opcode == 0) && !multOrDiv;
 
 
