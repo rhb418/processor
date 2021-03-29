@@ -104,9 +104,14 @@ module processor(
     exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
 
     assign DXOPCODE = outIRDX[31:27];
+<<<<<<< HEAD
 
     assign jump = (DXOPCODE == 1) || (DXOPCODE ==3); 
     assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE ==3); 
+=======
+    assign jump = (DXOPCODE == 1) || (DXOPCODE == 3); 
+    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3); 
+>>>>>>> myMultDiv
 
 
 
@@ -124,11 +129,9 @@ module processor(
  
     MW pMW(outIRXM,outPCXM, outOXM, q_dmem, notClock, reset, 1'b1, outIRMW,outPCMW, outOMW, outDMW);
 
-    assign MWOPCODE = outOMW[31:27];
-
     assign dataAfterM1 = (outIRMW[31:27] == 8) ? outDMW : outOMW; 
     assign dataAfterM2 = (commitMultDiv) ? PWResultOut : dataAfterM1; 
-    assign data_writeReg = (MWOPCODE == 3) ? outPCMW : dataAfterM2;
+    assign data_writeReg = (outIRMW[31:27] == 3) ? outPCMW : dataAfterM2; 
     
     always @ (posedge clock) begin
         $display("NE %d", ne);
