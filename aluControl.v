@@ -19,7 +19,7 @@ assign isAluOp = (opcode == 0) && !multOrDiv;
 
 
 assign branchOp = isBranch ? 1 : 0; 
-assign alop = isAluOp ? op1 : branchOp; 
+assign aluOp = isAluOp ? op1 : branchOp; 
 assign sham = (opcode ==5'b0 ) ? sham1 :  5'b0;
 
 assign SXmux = (opcode != 5'b0);
