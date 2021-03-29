@@ -1,9 +1,8 @@
-module regFileAndSXControl(FDIR, DXIR, MWIR, PWIR, multOrDivReady, readA, readB, writeD, wE, SXin);
+module regFileAndSXControl(FDIR, DXIR, MWIR, PWIR, multOrDivReady, readA, readB, writeD, wE);
 
 input [31:0] FDIR, DXIR, MWIR, PWIR; 
 input multOrDivReady; 
 output [4:0] readA, readB, writeD; 
-output [16:0] SXin; 
 output wE; 
 
 wire [4:0] MWOP, FDOP, PWOP, FDRD, FDRS, FDRT, readBAluOrLoadStore;
@@ -27,7 +26,6 @@ assign readA = isBranch ? FDRD : FDRS;
 assign readBAluOrLoadStore = isLoadOrStore ? FDRD : FDRT;
 assign readB = isBranch ? FDRS : readBAluOrLoadStore; 
 
-assign SXin = DXIR[16:0];
 assign wE = (MWOP == 0)  || ((PWOP == 0) && multOrDivReady) || (MWOP == 5) || (MWOP == 8); 
 assign writeD = multOrDivReady ? PWIR[26:22] : MWIR[26:22];
 

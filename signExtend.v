@@ -1,25 +1,41 @@
-module signExtend(in, out);
+module signExtend(DXIR, out);
 
-input [16:0] in;
+input [31:0] DXIR;
 output [31:0] out; 
 
-assign out[16:0] = in; 
+wire [31:0] imm, target;
+wire [4:0] DXIROP; 
 
-assign out[17] = in [16];
-assign out[18] = in [16];
-assign out[19] = in [16];
-assign out[20] = in [16];
-assign out[21] = in [16];
-assign out[22] = in [16];
-assign out[23] = in [16];
-assign out[24] = in [16];
-assign out[25] = in [16];
-assign out[26] = in [16];
-assign out[27] = in [16];
-assign out[28] = in [16];
-assign out[29] = in [16];
-assign out[30] = in [16];
-assign out[31] = in [16];
+assign DXIROP = DXIR[31:27]; 
 
+assign target[26:0] = DXIR[26:0]; 
+assign target[27] = DXIR[26];
+assign target[28] = DXIR[26];
+assign target[28] = DXIR[26];
+assign target[29] = DXIR[26];
+assign target[30] = DXIR[26];
+assign target[31] = DXIR[26];
+
+assign imm[16:0] = DXIR[16:0]; 
+assign imm[17] = DXIR[16];
+assign imm[18] = DXIR[16];
+assign imm[19] = DXIR[16];
+assign imm[20] = DXIR[16];
+assign imm[21] = DXIR[16];
+assign imm[22] = DXIR[16];
+assign imm[23] = DXIR[16];
+assign imm[24] = DXIR[16];
+assign imm[25] = DXIR[16];
+assign imm[26] = DXIR[16];
+assign imm[27] = DXIR[16];
+assign imm[28] = DXIR[16];
+assign imm[29] = DXIR[16];
+assign imm[30] = DXIR[16];
+assign imm[31] = DXIR[16];
+
+wire targetOps;
+assign targetOps = (DXIROP == 1);
+
+assign out = targetOps ? target : imm; 
 
 endmodule

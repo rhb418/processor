@@ -71,9 +71,8 @@ module processor(
     wire dc1, dc2, dc3, ne, lt, dc6, dc7, dc8, stall, multStall, loadStall, branchTaken;
     wire [31:0] outPCDX, outIRDX, outADX, outBDX, SXout, aluInA, aluInB_before_mux, aluInB, alu_out, outIRXM, outOXM, outBXM, outIRMW, outOMW, outDMW, inIRXM, inOXM, inDXIR, dataAfterM1, dataAfterM2, multResult, PWResultOut, PWINSOut; 
     wire [31:0] outMDA, outMDB, outMDIR; 
-    wire [16:0] SXin; 
     wire [1:0] aSelect, bSelect; 
-    wire [4:0] aluOp, sham; 
+    wire [4:0] aluOp, sham, DXOPCODE; 
     wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv; 
 
     assign address_imem = pcOut;
@@ -92,7 +91,7 @@ module processor(
 
     //DX TO XM
     DX pDX(inDXIR, outPCFD, data_readRegA, data_readRegB, notClock, reset, 1'b1, outIRDX, outPCDX, outADX, outBDX);    
-    signExtend se(SXin, SXout);
+    signExtend se(outIRDX, SXout);
 
     adder32 sxPC(pcPlusT,dc6, dc7, dc8, outPCDX, SXout, 1'b0); 
 
@@ -104,7 +103,8 @@ module processor(
     alu alu1(aluInA, aluInB, aluOp, sham, alu_out, ne, lt, ovf);
     exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
 
-    assign branchTaken = ((outIRDX[31:27] == 2) && ne) || ((outIRDX[31:27] == 6) && lt); 
+    assign DXOPCODE = outIRDX[31:27];
+    assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1); 
 
     multData multdata1(aluInA, aluInB_before_mux, outIRDX, notClock, reset, outMDA, outMDB, outMDIR, ctrl_MULT, ctrl_DIV); 
 
@@ -130,7 +130,7 @@ module processor(
     
     multControl mc1(outIRDX, PWReadyOut, clock, multStall, commitMultDiv);
 
-    regFileAndSXControl rc1(outIRFD, outIRDX, outIRMW, PWINSOut, commitMultDiv, ctrl_readRegA, ctrl_readRegB, ctrl_writeReg, ctrl_writeEnable, SXin);
+    regFileAndSXControl rc1(outIRFD, outIRDX, outIRMW, PWINSOut, commitMultDiv, ctrl_readRegA, ctrl_readRegB, ctrl_writeReg, ctrl_writeEnable);
 	
     bypassControl bc(outIRDX, outIRXM, outIRMW, aSelect, bSelect,memSelect);
 
