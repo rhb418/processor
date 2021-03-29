@@ -12,13 +12,16 @@ wire multOrDiv, cond;
 
 assign opcode = DXIR[31:27];
 
-assign op1 = DXIR[6:2];
+assign op1 = DXIR[6:2], branchOp;
 assign sham1 = DXIR[11:7]; 
-assign multOrDiv = (op1 == 6) || (op1 == 7); 
 
-assign cond = (opcode == 0) && !multOrDiv;
+assign multOrDiv = ((opcode == 0) && ((op1 == 6) || (op1 == 7))) ; 
+assign isBranch = (opcode == 2) || (opcode == 6); 
+assign isAluOp = (opcode == 0) && !multOrDiv;
 
-assign aluOp = cond ? op1 : 0; 
+
+assign branchOp = isBranch ? 1 : 0; 
+assign alop = isAluOp ? op1 : branchOp; 
 assign sham = (opcode ==5'b0 ) ? sham1 :  5'b0;
 
 assign SXmux = (opcode != 5'b0);
