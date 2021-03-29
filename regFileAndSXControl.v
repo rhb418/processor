@@ -14,7 +14,7 @@ assign FDRD = FDIR[26:22];
 assign FDRS = FDIR[21:17];
 assign FDRT = FDIR[16:12];
 
-wire isBranch, isLoadOrStore, isAluOP; 
+wire isBranch, isLoadOrStore, isAluOP, isBranchOrJr; 
 
 assign isBranchOrJr = (FDOP == 2) || (FDOP == 6) || (FDOP ==4); 
 assign isLoadOrStore = (FDOP == 7) || (FDOP ==8); 
