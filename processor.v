@@ -70,7 +70,7 @@ module processor(
     wire [31:0] pcIn, inFDIR; 
     wire dc1, dc2, dc3, ne, lt, dc6, dc7, dc8, stall, multStall, loadStall, branchTaken;
     wire [31:0] outPCDX, outIRDX, outADX, outBDX, SXout, aluInA, aluInB_before_mux, aluInB, alu_out, outIRXM, outOXM, outBXM, outIRMW, outOMW, outDMW, inIRXM, inOXM, inDXIR, dataAfterM1, dataAfterM2, multResult, PWResultOut, PWINSOut; 
-    wire [31:0] outMDA, outMDB, outMDIR, outPCXM, outPCMW, outLFSR, outEX; 
+    wire [31:0] outMDA, outMDB, outMDIR, outPCXM, outPCMW; 
     wire [1:0] aSelect, bSelect; 
     wire [4:0] aluOp, sham, DXOPCODE; 
     wire SXmux, ovf, memSelect, ctrl_MULT, ctrl_DIV, data_exception, data_resultRDY, PWReadyOut, commitMultDiv, jump, jr; 
@@ -103,11 +103,9 @@ module processor(
     assign aluInB = SXmux ? SXout : aluInB_before_mux;
 
     alu alu1(aluInA, aluInB, aluOp, sham, alu_out, ne, lt, ovf);
-    exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, outEX);
-    LFSR lfsr1(clock, outLFSR);
+    exceptionHandler ex(outIRDX, alu_out, ovf, inIRXM, inOXM);
 
     assign DXOPCODE = outIRDX[31:27];
-    assign inOXM = (DXOPCODE == 9) ? outLFSR : outEX; 
     assign jump = (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4) || ((DXOPCODE==22) && ne); 
     assign branchTaken = ((DXOPCODE == 2) && ne) || ((DXOPCODE == 6) && lt) || (DXOPCODE == 1) || (DXOPCODE == 3) || (DXOPCODE == 4) || ((DXOPCODE==22) && ne); 
     assign jr = (DXOPCODE == 4); 

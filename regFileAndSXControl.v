@@ -29,7 +29,7 @@ assign readBAluOrLoadStore = isLoadOrStore ? FDRD : FDRT;
 assign readBBranch = isBranchOrJr ? FDRS : readBAluOrLoadStore; 
 assign readB = (isEx) ? 30 : readBBranch; 
 
-assign wE = (MWOP == 0)  || ((PWOP == 0) && multOrDivReady) || (MWOP == 5) || (MWOP == 8) || (MWOP ==3) || (MWOP == 21);  
+assign wE = (MWOP == 0)  || ((PWOP == 0) && multOrDivReady) || (MWOP == 5) || (MWOP == 8) || (MWOP ==3) || (MWOP == 21); 
 assign aluOpWriteD = multOrDivReady ? PWIR[26:22] : MWIR[26:22];
 assign jrWD = (MWOP ==3) ? 31 : aluOpWriteD; 
 assign writeD = (MWOP == 21) ? 30 : jrWD; 
