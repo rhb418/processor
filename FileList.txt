@@ -22,6 +22,7 @@ equals0.v
 exceptionHandler.v
 FD.v
 full_adder.v
+LFSR.v
 lls16bit.v
 lls1bit.v
 lls1bit_tb.v
