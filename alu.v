@@ -20,6 +20,6 @@ module alu(data_operandA, data_operandB, ctrl_ALUopcode, ctrl_shiftamt, data_res
     
 
     mux_8 data(data_result, ctrl_ALUopcode[2:0], add,sub,and32,or32, lls32, ars32, b1, b2); 
-    assign overflow = ctrl_ALUopcode[0] ? overflowsub : overflowadd;
+    mux_2 ovfc(overflow,ctrl_ALUopcode[0], overflowadd, overflowsub); 
 
 endmodule
